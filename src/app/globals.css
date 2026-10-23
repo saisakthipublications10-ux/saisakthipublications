@@ -2,26 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@layer base {
+  html { scroll-behavior: smooth; }
+  body { @apply bg-brand-bg text-brand-text antialiased; }
+  :focus-visible { outline: 2px solid #F3B64B; outline-offset: 3px; border-radius: 6px; }
+  ::selection { background: #F3B64B; color: #102C46; }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer components {
+  /* Masthead-style double rule */
+  .rule-double {
+    border-top: 3px double #102C46;
   }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .rule-double-light {
+    border-top: 3px double rgba(255,255,255,.35);
   }
+  /* Faint newsprint grid for the hero */
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  /* Subtle paper grain for ad mockups */
+  .paper {
+    background-color: #FFFEFB;
+    background-image: radial-gradient(rgba(16,44,70,.05) 1px, transparent 1px);
+    background-size: 6px 6px;
+  }
+  .eyebrow {
+    @apply text-[11px] font-bold uppercase tracking-[0.18em];
+  }
+  .delay-1 { animation-delay: .08s; }
+  .delay-2 { animation-delay: .18s; }
+  .delay-3 { animation-delay: .3s; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }

@@ -1,0 +1,49 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "locations", "queryScope": "COLLECTION",
+      "fields": [{ "fieldPath": "active", "order": "ASCENDING" }, { "fieldPath": "name", "order": "ASCENDING" }]
+    },
+    {
+      "collectionGroup": "newspaperLocations", "queryScope": "COLLECTION",
+      "fields": [{ "fieldPath": "locationId", "order": "ASCENDING" }, { "fieldPath": "active", "order": "ASCENDING" }]
+    },
+    {
+      "collectionGroup": "pricingRules", "queryScope": "COLLECTION",
+      "fields": [{ "fieldPath": "newspaperId", "order": "ASCENDING" }, { "fieldPath": "formatId", "order": "ASCENDING" }, { "fieldPath": "active", "order": "ASCENDING" }]
+    },
+    {
+      "collectionGroup": "bookings", "queryScope": "COLLECTION",
+      "fields": [{ "fieldPath": "customerId", "order": "ASCENDING" }, { "fieldPath": "createdAt", "order": "DESCENDING" }]
+    },
+    {
+      "collectionGroup": "bookings", "queryScope": "COLLECTION",
+      "fields": [{ "fieldPath": "customerId", "order": "ASCENDING" }, { "fieldPath": "status", "order": "ASCENDING" }, { "fieldPath": "createdAt", "order": "DESCENDING" }]
+    },
+    {
+      "collectionGroup": "bookings", "queryScope": "COLLECTION",
+      "fields": [{ "fieldPath": "status", "order": "ASCENDING" }, { "fieldPath": "createdAt", "order": "DESCENDING" }]
+    },
+    {
+      "collectionGroup": "bookings", "queryScope": "COLLECTION",
+      "fields": [{ "fieldPath": "newspaperId", "order": "ASCENDING" }, { "fieldPath": "createdAt", "order": "DESCENDING" }]
+    },
+    {
+      "collectionGroup": "bookings", "queryScope": "COLLECTION",
+      "fields": [{ "fieldPath": "locationId", "order": "ASCENDING" }, { "fieldPath": "createdAt", "order": "DESCENDING" }]
+    },
+    {
+      "collectionGroup": "bookings", "queryScope": "COLLECTION",
+      "fields": [{ "fieldPath": "publicationDate", "order": "ASCENDING" }, { "fieldPath": "createdAt", "order": "DESCENDING" }]
+    },
+    {
+      "collectionGroup": "bookings", "queryScope": "COLLECTION",
+      "fields": [{ "fieldPath": "status", "order": "ASCENDING" }, { "fieldPath": "publicationDate", "order": "ASCENDING" }]
+    },
+    {
+      "collectionGroup": "bookings", "queryScope": "COLLECTION",
+      "fields": [{ "fieldPath": "paymentStatus", "order": "ASCENDING" }, { "fieldPath": "totalMinor", "order": "ASCENDING" }]
+    }
+  ],
+  "fieldOverrides": []
+}

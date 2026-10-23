@@ -1,26 +1,50 @@
 {
-  "name": "nanganallur-times",
+  "name": "saisakthi-publications",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest run",
+    "seed": "tsx scripts/seed.ts",
+    "make-admin": "tsx scripts/set-admin-claim.ts",
+    "rules:deploy": "firebase deploy --only firestore:rules,firestore:indexes,storage"
   },
   "dependencies": {
-    "react": "^18",
-    "react-dom": "^18",
-    "next": "14.2.35"
+    "@hookform/resolvers": "^3.9.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.4.0",
+    "dotenv": "^18.0.8",
+    "firebase": "^11.10.0",
+    "firebase-admin": "^13.10.0",
+    "lucide-react": "^0.468.0",
+    "next": "^14.2.35",
+    "razorpay": "^2.9.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.54.2",
+    "server-only": "^0.0.1",
+    "tailwind-merge": "^2.6.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.35"
+    "@types/node": "^20.17.10",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.35",
+    "firebase-tools": "^15.34.1",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.23.15",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "overrides": {
+    "protobufjs": "^7.5.4",
+    "braces": "^3.0.3",
+    "micromatch": "^4.0.8"
   }
 }
