@@ -1,16 +1,27 @@
 import { NextRequest } from "next/server";
 import { db } from "@/lib/firebase-admin";
 import { ok, fail, handleError } from "@/lib/api";
+import { getSession } from "@/lib/auth";
 
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+const send = (res: Response) => {
+  res.headers.set("Cache-Control", "no-store, max-age=0");
+  return res;
+};
 
 export async function GET(req: NextRequest) {
   try {
-    const locationId = req.nextUrl.searchParams.get("locationId");
-    if (!locationId) return fail("locationId is required", 422);
+    const sp = req.nextUrl.searchParams;
+    const locationId = (sp.get("locationId") ?? sp.get("location") ?? "").trim();
+    if (!locationId) return send(fail("locationId is required", 422));
 
-    // Single-field query: no composite index needed. "active" is checked below.
-    const mapSnap = await db.collection("newspaperLocations").where("locationId", "==", locationId).get();
+    const [mapSnap, locSnap] = await Promise.all([
+      db.collection("newspaperLocations").where("locationId", "==", locationId).get(),
+      db.collection("locations").get(),
+    ]);
     const mappings = mapSnap.docs.map((d) => ({
       docId: d.id,
       newspaperId: d.data().newspaperId as string | undefined,
@@ -32,12 +43,20 @@ export async function GET(req: NextRequest) {
     });
     papers.sort((a, b) => a.name.localeCompare(b.name));
 
-    // Development only: /api/newspapers?locationId=kelambakkam&debug=1
-    if (process.env.NODE_ENV !== "production" && req.nextUrl.searchParams.get("debug"))
-      return ok({ locationId, mappingsFound: mappings.length, papers, skipped });
+    // /api/newspapers?locationId=kelambakkam&debug=1 (development, or a signed-in admin)
+    if (sp.get("debug") && (process.env.NODE_ENV !== "production" || (await getSession())?.role === "admin"))
+      return send(ok({
+        locationIdReceived: locationId,
+        locationExists: locSnap.docs.some((d) => d.id === locationId),
+        knownLocationIds: locSnap.docs.map((d) => d.id),
+        firebaseProject: process.env.FIREBASE_PROJECT_ID ?? "(from FIREBASE_SERVICE_ACCOUNT_BASE64)",
+        mappingsFound: mappings.length,
+        papers,
+        skipped,
+      }));
 
-    return ok(papers);
+    return send(ok(papers));
   } catch (e) {
-    return handleError(e);
+    return send(handleError(e));
   }
 }
