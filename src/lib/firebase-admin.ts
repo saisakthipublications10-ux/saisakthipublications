@@ -11,19 +11,23 @@ function normalizeKey(raw?: string) {
   return k.replace(/\\n/g, "\n");
 }
 
+function credential() {
+  const b64 = process.env.FIREBASE_SERVICE_ACCOUNT_BASE64;
+  if (b64) {
+    const j = JSON.parse(Buffer.from(b64, "base64").toString("utf8"));
+    return cert({ projectId: j.project_id, clientEmail: j.client_email, privateKey: j.private_key });
+  }
+  return cert({
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    privateKey: normalizeKey(process.env.FIREBASE_PRIVATE_KEY),
+  });
+}
+
 let cached: App | undefined;
 function app(): App {
   if (cached) return cached;
-  cached =
-    getApps()[0] ??
-    initializeApp({
-      credential: cert({
-        projectId: process.env.FIREBASE_PROJECT_ID,
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        privateKey: normalizeKey(process.env.FIREBASE_PRIVATE_KEY),
-      }),
-      storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-    });
+  cached = getApps()[0] ?? initializeApp({ credential: credential(), storageBucket: process.env.FIREBASE_STORAGE_BUCKET });
   return cached;
 }
 
