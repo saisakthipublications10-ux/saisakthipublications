@@ -14,7 +14,7 @@ const NAV = [
 export function Logo({ light = false }: { light?: boolean }) {
   return (
     <Link href="/" aria-label="Saisakthi Publications home" className="flex items-center gap-2.5">
-     <img src="/log.png" alt="" className="h-8 w-8" />
+     <img src="/logo.png" alt="Sai Sakthi Publications" className="h-9 w-auto" />
       <span className={`text-[13px] font-extrabold leading-none tracking-[0.2em] ${light ? "text-white" : "text-brand-navy"}`}>
         SAISAKTHI
         <span className="mt-1 block text-[9px] font-semibold tracking-[0.22em] text-brand-gold">PUBLICATIONS</span>

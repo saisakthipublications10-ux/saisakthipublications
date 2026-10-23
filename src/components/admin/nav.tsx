@@ -21,7 +21,7 @@ const ITEMS = [
 
 function Mark() {
   return (
-    <img src="/log.png" alt="" className="h-8 w-8" />
+    <img src="/logo.png" alt="Sai Sakthi Publications" className="h-9 w-auto" />
   );
 }       
 
