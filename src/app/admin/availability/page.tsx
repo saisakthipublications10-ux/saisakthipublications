@@ -16,7 +16,7 @@ export default async function Availability({ searchParams }: { searchParams: { p
   const papers = await db.collection("newspapers").orderBy("name").get();
   const paperId = searchParams.paper ?? papers.docs[0]?.id;
 
-  let rows: { date: string; label: string; holiday: boolean; av: FirebaseFirestore.DocumentData | undefined }[] = [];
+  const rows: { date: string; label: string; holiday: boolean; av: FirebaseFirestore.DocumentData | undefined }[] = [];
   if (paperId) {
     const [schedSnap, avSnap] = await Promise.all([
       db.collection("publicationSchedules").doc(paperId).get(),

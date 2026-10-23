@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Newspaper, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { getSession } from "@/lib/auth";
 import { SignOutButton, UserMenu } from "./user-menu";
 

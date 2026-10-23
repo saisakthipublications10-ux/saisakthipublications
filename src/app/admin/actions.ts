@@ -33,31 +33,7 @@ async function setActive(col: string, fd: FormData) {
   if (!res.ok) throw new Error(res.message);
 }
 export async function toggleLocation(fd: FormData) { await setActive("locations", fd); }
-export async function toggleNewspaper(fd: FormData) {
-  const res = await run(async (admin) => {
-    const id = str(fd, "id");
-    const active = str(fd, "next") === "true";
-    const ref = db.collection("newspapers").doc(id);
-    const snap = await ref.get();
-    if (!snap.exists) throw new HttpError(404, "Not found");
-
-    if (active) {
-      const [maps, sched] = await Promise.all([
-        db.collection("newspaperLocations").where("newspaperId", "==", id).where("active", "==", true).limit(1).get(),
-        db.collection("publicationSchedules").doc(id).get(),
-      ]);
-      const formats = (snap.data()!.formatIds as string[]) ?? [];
-      const days = (sched.data()?.weekdays as number[]) ?? [];
-      if (maps.empty || !formats.length || !days.length)
-        throw new HttpError(422, "Set at least one location, one format and one publication day first (use Configure).");
-    }
-
-    await ref.update({ active });
-    await audit(admin, `newspapers.${active ? "enable" : "disable"}`, `newspapers/${id}`);
-    return "Saved";
-  });
-  if (!res.ok) throw new Error(res.message);
-}
+export async function toggleNewspaper(fd: FormData) { await setActive("newspapers", fd); }
 export async function toggleCategory(fd: FormData) { await setActive("categories", fd); }
 export async function toggleFormat(fd: FormData) { await setActive("formats", fd); }
 export async function toggleRule(fd: FormData) { await setActive("pricingRules", fd); }
@@ -129,15 +105,17 @@ export async function saveNewspaper(_: Result, fd: FormData) {
 
     const chosenLocs = fd.getAll("locations").map(String).filter((l) => validLocs.has(l));
     const formatIds = fd.getAll("formats").map(String).filter((f) => validFmts.has(f));
-    const weekdays = [...new Set(fd.getAll("weekdays").map(Number))].filter((d) => Number.isInteger(d) && d >= 0 && d <= 6).sort();
+    const weekdays = Array.from(new Set(fd.getAll("weekdays").map(Number)))
+      .filter((d) => Number.isInteger(d) && d >= 0 && d <= 6)
+      .sort();
 
     const horizonDays = z.coerce.number().int().min(7).max(365).parse(str(fd, "horizonDays") || "60");
     const cutoffHour = z.coerce.number().int().min(0).max(23).parse(str(fd, "cutoffHour") || "17");
     const cutoffMinute = z.coerce.number().int().min(0).max(59).parse(str(fd, "cutoffMinute") || "0");
 
-    const holidays = [...new Set(
+    const holidays = Array.from(new Set(
       str(fd, "holidays").split(/[\s,]+/).filter(Boolean).map((h) => dateStr.parse(h)),
-    )].sort();
+    )).sort();
 
     if (active && (!chosenLocs.length || !formatIds.length || !weekdays.length))
       throw new HttpError(422, "Before enabling, choose at least one location, one format and one publication day.");
@@ -145,7 +123,7 @@ export async function saveNewspaper(_: Result, fd: FormData) {
     const batch = db.batch();
     batch.update(paperRef, { name: n, active, formatIds, cutoffHour, cutoffMinute });
     batch.set(db.collection("publicationSchedules").doc(id), { weekdays, holidays, horizonDays, cutoffHour, cutoffMinute });
-    for (const loc of validLocs)
+    for (const loc of Array.from(validLocs))
       batch.set(
         db.collection("newspaperLocations").doc(`${id}_${loc}`),
         { newspaperId: id, locationId: loc, active: chosenLocs.includes(loc) },

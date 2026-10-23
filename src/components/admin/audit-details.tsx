@@ -48,7 +48,7 @@ export const actionLabel = (a: string) =>
 const arr = (v: unknown) => (Array.isArray(v) ? v.map(String) : []);
 
 function dayNames(v: unknown) {
-  const d = [...new Set(arr(v).map(Number))].filter((n) => n >= 0 && n <= 6).sort();
+  const d = Array.from(new Set(arr(v).map(Number))).filter((n) => n >= 0 && n <= 6).sort();
   if (d.length === 7) return ["Every day"];
   return d.map((n) => DAYS[n]);
 }
