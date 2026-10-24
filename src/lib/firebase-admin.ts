@@ -11,23 +11,46 @@ function normalizeKey(raw?: string) {
   return k.replace(/\\n/g, "\n");
 }
 
-function credential() {
-  const b64 = process.env.FIREBASE_SERVICE_ACCOUNT_BASE64;
-  if (b64) {
-    const j = JSON.parse(Buffer.from(b64, "base64").toString("utf8"));
-    return cert({ projectId: j.project_id, clientEmail: j.client_email, privateKey: j.private_key });
+function readServiceAccount() {
+  const raw = process.env.FIREBASE_SERVICE_ACCOUNT_BASE64?.trim().replace(/^["']|["']$/g, "");
+  if (raw) {
+    let j: Record<string, string>;
+    try {
+      const text = raw.startsWith("{") ? raw : Buffer.from(raw, "base64").toString("utf8");
+      j = JSON.parse(text);
+    } catch {
+      throw new Error("FIREBASE_SERVICE_ACCOUNT_BASE64 is not valid base64 JSON. Rebuild it from the key file.");
+    }
+    const missing = ["project_id", "client_email", "private_key"].filter((k) => !j[k]);
+    if (missing.length) throw new Error(`FIREBASE_SERVICE_ACCOUNT_BASE64 is missing: ${missing.join(", ")}`);
+    return {
+      projectId: j.project_id,
+      clientEmail: j.client_email,
+      privateKey: String(j.private_key).replace(/\\n/g, "\n"),
+    };
   }
-  return cert({
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    privateKey: normalizeKey(process.env.FIREBASE_PRIVATE_KEY),
-  });
+
+  const privateKey = normalizeKey(process.env.FIREBASE_PRIVATE_KEY);
+  const projectId = process.env.FIREBASE_PROJECT_ID?.trim();
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL?.trim();
+  const absent = [
+    !projectId && "FIREBASE_PROJECT_ID",
+    !clientEmail && "FIREBASE_CLIENT_EMAIL",
+    !privateKey && "FIREBASE_PRIVATE_KEY",
+  ].filter(Boolean);
+  if (absent.length) throw new Error(`Firebase credentials missing: ${absent.join(", ")}`);
+  return { projectId: projectId!, clientEmail: clientEmail!, privateKey: privateKey! };
 }
 
 let cached: App | undefined;
 function app(): App {
   if (cached) return cached;
-  cached = getApps()[0] ?? initializeApp({ credential: credential(), storageBucket: process.env.FIREBASE_STORAGE_BUCKET });
+  cached =
+    getApps()[0] ??
+    initializeApp({
+      credential: cert(readServiceAccount()),
+      storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+    });
   return cached;
 }
 
