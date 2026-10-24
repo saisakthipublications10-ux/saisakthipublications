@@ -30,6 +30,10 @@ const MESSAGES: Record<string, string> = {
   "auth/too-many-requests": "Too many attempts. Please wait a moment and try again.",
   "auth/popup-closed-by-user": "",
   "auth/network-request-failed": "Network problem. Check your connection and retry.",
+  "auth/unauthorized-domain": "This site isn't authorized for Firebase sign-in. Add your Vercel domain to the Authorized domains in Firebase Authentication settings.",
+  "auth/operation-not-allowed": "This sign-in method isn't enabled. Enable it in Firebase Authentication sign-in providers.",
+  "auth/invalid-api-key": "Firebase sign-in isn't configured correctly. Check the public Firebase environment variables in Vercel.",
+  "auth/requests-to-this-api-are-blocked": "Firebase is blocking requests from this site. Check the API key's website restrictions for your Vercel domain.",
 };
 
 export function AuthForm({ next }: { next: string }) {
@@ -55,10 +59,11 @@ export function AuthForm({ next }: { next: string }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ idToken }),
     });
-    const payload = await response.json();
-    if (!response.ok || !payload.ok) {
-      throw new Error(payload.error?.message ?? "Could not start your session");
+    if (response.status >= 500) {
+      throw new Error("Your sign-in succeeded, but we couldn't create your secure session. Check the Firebase Admin credentials and Firestore access configured in Vercel, then redeploy.");
     }
+    const payload = await response.json();
+    if (!response.ok || !payload.ok) throw new Error(payload.error?.message ?? "Could not start your session");
     await signOut(auth);
     router.replace(next);
     router.refresh();
@@ -72,7 +77,7 @@ export function AuthForm({ next }: { next: string }) {
       await action();
     } catch (cause) {
       const code = cause instanceof FirebaseError ? cause.code : "";
-      setError(code ? (MESSAGES[code] ?? "Something went wrong. Please try again.") :
+      setError(code ? (MESSAGES[code] ?? `Firebase sign-in failed (${code}). Please try again or contact support.`) :
         cause instanceof Error ? cause.message : "Something went wrong. Please try again.");
     } finally {
       setBusy(false);

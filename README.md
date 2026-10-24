@@ -34,3 +34,16 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+### Authentication configuration
+
+Add the following environment variables in the Vercel project settings for each environment you deploy, then redeploy:
+
+- `NEXT_PUBLIC_FIREBASE_API_KEY`
+- `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
+- `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
+- `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`
+- Firebase Admin credentials: either `FIREBASE_SERVICE_ACCOUNT_BASE64` or all of `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, and `FIREBASE_PRIVATE_KEY`
+- `FIREBASE_STORAGE_BUCKET`
+
+In Firebase Console, enable the sign-in providers you use under Authentication > Sign-in method. Add the production hostname (and any Vercel preview hostnames used for testing) under Authentication > Settings > Authorized domains. If the Firebase API key has website/referrer restrictions, allow those hostnames there as well. Never expose Firebase Admin credentials as `NEXT_PUBLIC_*` variables.
