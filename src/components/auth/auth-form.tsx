@@ -33,6 +33,7 @@ const MESSAGES: Record<string, string> = {
   "auth/unauthorized-domain": "This site isn't authorized for Firebase sign-in. Add your Vercel domain to the Authorized domains in Firebase Authentication settings.",
   "auth/operation-not-allowed": "This sign-in method isn't enabled. Enable it in Firebase Authentication sign-in providers.",
   "auth/invalid-api-key": "Firebase sign-in isn't configured correctly. Check the public Firebase environment variables in Vercel.",
+  "auth/api-key-not-valid.-please-pass-a-valid-api-key.": "The Firebase API key used by this deployment is invalid. In Vercel, set NEXT_PUBLIC_FIREBASE_API_KEY to the Web API key from the matching Firebase project, then redeploy. Also check that the key is enabled and its API restrictions allow Firebase Authentication.",
   "auth/requests-to-this-api-are-blocked": "Firebase is blocking requests from this site. Check the API key's website restrictions for your Vercel domain.",
 };
 

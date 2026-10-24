@@ -47,3 +47,5 @@ Add the following environment variables in the Vercel project settings for each 
 - `FIREBASE_STORAGE_BUCKET`
 
 In Firebase Console, enable the sign-in providers you use under Authentication > Sign-in method. Add the production hostname (and any Vercel preview hostnames used for testing) under Authentication > Settings > Authorized domains. If the Firebase API key has website/referrer restrictions, allow those hostnames there as well. Never expose Firebase Admin credentials as `NEXT_PUBLIC_*` variables.
+
+For `auth/api-key-not-valid`, copy the Web API key from Firebase Console > Project settings > General > Your apps and set it as `NEXT_PUBLIC_FIREBASE_API_KEY` in the matching Vercel project. Confirm `NEXT_PUBLIC_FIREBASE_PROJECT_ID` and `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` belong to that same Firebase project. Check the key's API restrictions in Google Cloud Console, then redeploy so Next.js rebuilds with the corrected public variables.
