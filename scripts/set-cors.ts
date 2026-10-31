@@ -19,7 +19,7 @@ async function main() {
     const u = new URL(o); // must be a full address like https://example.com
     return u.origin;
   });
-  const origins = [...new Set(["http://localhost:3000", ...extra])];
+  const origins = Array.from(new Set(["http://localhost:3000", ...extra]));
 
   const bucket = getStorage().bucket(name);
   await bucket.setCorsConfiguration([
