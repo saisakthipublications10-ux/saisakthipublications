@@ -40,6 +40,10 @@ const ACTION: Record<string, string> = {
   "booking.status": "Booking status changed",
   "bookings.export": "Bookings exported to CSV",
   "support.resolve": "Support message resolved",
+  "epaper.create": "E-paper issue uploaded",
+  "epaper.publish": "E-paper issue published",
+  "epaper.unpublish": "E-paper issue unpublished",
+  "epaper.delete": "E-paper issue deleted",
 };
 
 export const actionLabel = (a: string) =>
@@ -103,6 +107,7 @@ export function Target({ target, names }: { target: string; names: Names }) {
     }
     case "settings": return <span>{id === "tax" ? "Tax settings" : id}</span>;
     case "supportMessages": return link("Support message", "/admin/support");
+    case "epapers": return link("E-paper issue", "/admin/epaper");
     default: return <span className="break-all">{[col, id, ...rest].filter(Boolean).join("/")}</span>;
   }
 }

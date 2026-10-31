@@ -43,7 +43,13 @@
     {
       "collectionGroup": "bookings", "queryScope": "COLLECTION",
       "fields": [{ "fieldPath": "paymentStatus", "order": "ASCENDING" }, { "fieldPath": "totalMinor", "order": "ASCENDING" }]
-    }
+    },
+    { "collectionGroup": "epapers", "queryScope": "COLLECTION",
+  "fields": [{ "fieldPath": "status", "order": "ASCENDING" }, { "fieldPath": "issueDate", "order": "DESCENDING" }] },
+{ "collectionGroup": "epapers", "queryScope": "COLLECTION",
+  "fields": [{ "fieldPath": "status", "order": "ASCENDING" }, { "fieldPath": "newspaperId", "order": "ASCENDING" }, { "fieldPath": "issueDate", "order": "DESCENDING" }]
+}
+    
   ],
   "fieldOverrides": []
 }

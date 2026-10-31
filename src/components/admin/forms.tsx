@@ -33,6 +33,7 @@ export function AdminForm({ action, children, className = "", resetOnSuccess = f
   );
 }
 
+
 export function SubmitButton({ children, tone = "primary", className = "" }: { children: ReactNode; tone?: Tone; className?: string }) {
   const { pending } = useFormStatus();
   return (
@@ -50,6 +51,16 @@ export function IntentButton({ intent, children, tone = "primary", confirm }: {
   return (
     <button type="submit" name="intent" value={intent} disabled={pending} className={`${base} ${TONE[tone]}`}
       onClick={(e) => { if (confirm && !window.confirm(confirm)) e.preventDefault(); }}>
+      {children}
+    </button>
+  );
+}
+
+export function ConfirmSubmit({ children, confirm, className = "" }: { children: ReactNode; confirm: string; className?: string }) {
+  const { pending } = useFormStatus();
+  return (
+    <button type="submit" disabled={pending} className={className}
+      onClick={(e) => { if (!window.confirm(confirm)) e.preventDefault(); }}>
       {children}
     </button>
   );

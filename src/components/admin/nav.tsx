@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  CalendarDays, ClipboardList, ExternalLink, IndianRupee, LayoutDashboard, LifeBuoy,
+  BookOpen, CalendarDays, ClipboardList, ExternalLink, IndianRupee, LayoutDashboard, LifeBuoy,
   MapPin, Newspaper, ScrollText, Tags,
 } from "lucide-react";
 import { SignOutButton } from "@/components/layout/user-menu";
@@ -13,6 +13,7 @@ const ITEMS = [
   { href: "/admin/newspapers", label: "Newspapers", icon: Newspaper },
   { href: "/admin/locations", label: "Locations", icon: MapPin },
   { href: "/admin/availability", label: "Availability", icon: CalendarDays },
+  { href: "/admin/epaper", label: "E-Paper", icon: BookOpen },
   { href: "/admin/pricing", label: "Pricing", icon: IndianRupee },
   { href: "/admin/catalog", label: "Catalog", icon: Tags },
   { href: "/admin/support", label: "Support", icon: LifeBuoy },
